@@ -4,38 +4,43 @@ A Lesotho-first marketplace connecting farmers with consumers, restaurants, shop
 
 ## Current MVP
 
-- Responsive landing page
-- Marketplace with search and category filters
+- Responsive landing page and mobile-first UI
+- Farmer and buyer signup/sign-in
+- Supabase profile creation from signup metadata
+- Farmer dashboard
+- Real farmer product listing flow
+- Live marketplace reads from Supabase with demo fallback
+- Search and category filters
 - Product detail pages
-- Farmer listing form/prototype
-- How-it-works and business model page
-- Production database blueprint in `supabase/schema.sql`
+- Database schema with Row Level Security policies
+- Planned 3% marketplace commission field on orders
 
-## Run locally
+## Supabase setup
 
-```bash
-npm install
-npm run dev
-```
+1. Create a Supabase project.
+2. Open **SQL Editor** and run `supabase/schema.sql` from this repository.
+3. In your deployment environment, add the variables shown in `.env.example`:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+4. Enable email/password authentication in Supabase Auth.
+5. Run the app with `npm install && npm run dev`.
 
-Open `http://localhost:3000`.
+The browser only uses the public anon key. Never put a Supabase service-role key in client-side code or public environment variables.
 
-## Planned production features
+## Next production milestones
 
-1. Supabase authentication and profiles
-2. Real product image uploads
-3. Persistent product listings
-4. Buyer orders and farmer order management
-5. Messaging between buyers and farmers
-6. Reviews and seller trust signals
-7. Payments and a server-side marketplace commission
-8. Delivery/driver matching
-9. Admin dashboard and moderation
-10. Analytics and premium listings
+1. Product image uploads with Supabase Storage
+2. Buyer checkout and farmer order management
+3. Buyer/farmer messaging
+4. Reviews and seller trust signals
+5. Server-side payment processing and 3% commission settlement
+6. Delivery/driver matching
+7. Admin moderation and analytics
+8. Premium listings and business accounts
 
 ## Business model
 
-The MVP is designed around free basic access for farmers. The initial target model is a small commission on successful transactions, plus optional promoted listings, premium business tools and future delivery revenue.
+Basic farmer access stays free initially. Revenue is planned from a small commission on successful transactions, promoted listings, premium business tools and future delivery revenue.
 
 ## Product principle
 
