@@ -4,44 +4,7 @@ import { useState } from 'react';
 import { supabase } from '../../lib/supabase';
 
 export default function AuthPage() {
-  const [mode, setMode] = useState('signup');
-  const [role, setRole] = useState('farmer');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [location, setLocation] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [busy, setBusy] = useState(false);
-
-  async function submit(e) {
-    e.preventDefault(); setMessage('');
-    if (!supabase) { setMessage('Connect Supabase first. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your deployment settings.'); return; }
-    setBusy(true);
-    try {
-      if (mode === 'signup') {
-        const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: name, role, phone, location } } });
-        if (error) throw error;
-        if (data.user) {
-          const { error: profileError } = await supabase.from('profiles').upsert({ id: data.user.id, full_name: name, role, phone, location });
-          if (profileError) throw profileError;
-        }
-        setMessage('Account created. Check your email if confirmation is enabled, then sign in.');
-        setMode('login');
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        window.location.href = '/dashboard';
-      }
-    } catch (err) { setMessage(err.message || 'Something went wrong.'); }
-    finally { setBusy(false); }
-  }
-
-  return <main className="auth-page"><div className="auth-card"><a className="brand" href="/">🌱 AgriLink</a><h1>{mode === 'signup' ? 'Join AgriLink' : 'Welcome back'}</h1><p className="muted">{mode === 'signup' ? 'Create an account as a farmer or buyer.' : 'Sign in to manage your marketplace activity.'}</p>
-    <div className="auth-tabs"><button className={'btn '+(mode==='signup'?'primary':'secondary')} onClick={()=>setMode('signup')}>Create account</button><button className={'btn '+(mode==='login'?'primary':'secondary')} onClick={()=>setMode('login')}>Sign in</button></div>
-    <form onSubmit={submit} className="form-grid">
-      {mode==='signup' && <><label>Account type<select value={role} onChange={e=>setRole(e.target.value)}><option value="farmer">Farmer — I sell produce</option><option value="buyer">Buyer — I buy produce</option></select></label><label>Full name<input required value={name} onChange={e=>setName(e.target.value)} placeholder="Your name"/></label><label>Phone<input value={phone} onChange={e=>setPhone(e.target.value)} placeholder="+266 ..."/></label><label>Location<input required value={location} onChange={e=>setLocation(e.target.value)} placeholder="Maseru, Leribe, Teyateyaneng..."/></label></>}
-      <label>Email<input required type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com"/></label><label>Password<input required minLength={6} type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="At least 6 characters"/></label>
-      <button className="btn primary" disabled={busy}>{busy ? 'Please wait...' : mode==='signup' ? 'Create my account' : 'Sign in'}</button>
-    </form>{message && <div className="notice">{message}</div>}<p className="muted small">By using AgriLink, you agree to use the marketplace honestly and safely.</p></div></main>;
+  const [mode, setMode] = useState('signup'); const [role, setRole] = useState('farmer'); const [name, setName] = useState(''); const [phone, setPhone] = useState(''); const [location, setLocation] = useState(''); const [email, setEmail] = useState(''); const [password, setPassword] = useState(''); const [message, setMessage] = useState(''); const [busy, setBusy] = useState(false);
+  async function submit(e) { e.preventDefault(); setMessage(''); if (!supabase) { setMessage('Connect Supabase first. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your deployment settings.'); return; } setBusy(true); try { if (mode === 'signup') { const { error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: name, role, phone, location } } }); if (error) throw error; setMessage('Account created. Check your email if confirmation is enabled, then sign in.'); setMode('login'); } else { const { error } = await supabase.auth.signInWithPassword({ email, password }); if (error) throw error; window.location.href = '/dashboard'; } } catch (err) { setMessage(err.message || 'Something went wrong.'); } finally { setBusy(false); } }
+  return <main className="auth-page"><div className="auth-card"><a className="brand" href="/">🌱 AgriLink</a><h1>{mode === 'signup' ? 'Join AgriLink' : 'Welcome back'}</h1><p className="muted">{mode === 'signup' ? 'Create an account as a farmer or buyer.' : 'Sign in to manage your marketplace activity.'}</p><div className="auth-tabs"><button type="button" className={'btn '+(mode==='signup'?'primary':'secondary')} onClick={()=>setMode('signup')}>Create account</button><button type="button" className={'btn '+(mode==='login'?'primary':'secondary')} onClick={()=>setMode('login')}>Sign in</button></div><form onSubmit={submit} className="form-grid">{mode==='signup' && <><label>Account type<select value={role} onChange={e=>setRole(e.target.value)}><option value="farmer">Farmer — I sell produce</option><option value="buyer">Buyer — I buy produce</option></select></label><label>Full name<input required value={name} onChange={e=>setName(e.target.value)} placeholder="Your name"/></label><label>Phone<input value={phone} onChange={e=>setPhone(e.target.value)} placeholder="+266 ..."/></label><label>Location<input required value={location} onChange={e=>setLocation(e.target.value)} placeholder="Maseru, Leribe, Teyateyaneng..."/></label></>}<label>Email<input required type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@example.com"/></label><label>Password<input required minLength={6} type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="At least 6 characters"/></label><button className="btn primary" disabled={busy}>{busy ? 'Please wait...' : mode==='signup' ? 'Create my account' : 'Sign in'}</button></form>{message && <div className="notice">{message}</div>}<p className="muted small">By using AgriLink, you agree to use the marketplace honestly and safely.</p></div></main>;
 }
